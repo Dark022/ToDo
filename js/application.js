@@ -10,8 +10,11 @@ const tableBody = document.getElementById("tableBody");
 const createTaskBtn = document.getElementById("createTask");
 const cancelBtn = document.getElementById("cancel");
 const deleteBtn = document.getElementById("delete");
-const editBtn = document.getElementById("edit")
+const editBtn = document.getElementById("edit");
+const incompletedTask = document.getElementById("incompletedTask");
 
+let toDosCount = 0;
+let tableCount = 0;
 let rowParentIndex;
 let taskTitle;
 let taskLimitDate;
@@ -68,9 +71,10 @@ createTaskBtn.addEventListener('click', () => {
     `
     <tr class="colborder">
      <th scope="row" class="checkicon colborder">
-        <i class="far fa-check-circle text-muted" id="check-icon"></i>
+        <i class="far fa-check-circle text-muted" id="check-icon" onclick="changeStateToCheck(this);"></i>
+        <i class="far fa-times-circle text-danger d-none" id="times-icon" onclick="changeStateToUnCheck(this);"></i>
      </th>
-     <td class="task lato pointer">${taskTitle}</th>
+     <td class="task lato pointer" onclick="showPreview(this);">${taskTitle}</th>
      <td class="complete lato">${finalDate}</th>
      <td class="action" data-description="${taskDescription}">
         <i class="fas fa-pencil-alt text-muted mr-3" data-toggle="modal" data-target="#modalEdit" onclick="getRowParentElement2(this);"></i>
@@ -82,11 +86,30 @@ createTaskBtn.addEventListener('click', () => {
     document.getElementById("inputDate").value = new Date().toISOString().split("T")[0];
     document.getElementById("inputTitle").value = "";
     document.getElementById("inputDescription").value = "";
+
+    tableCount += 1;
+    if(tableCount > 6){
+        document.getElementById("preview").style.position = "relative";
+    }
+
+    toDosCount += 1;
+    incompletedTask.innerHTML =`${toDosCount} Incompleted Task`;
 })
 
 deleteBtn.addEventListener('click', () => {
     const i = rowParentIndex.parentNode.parentNode.rowIndex;
     document.getElementById("tableBody").deleteRow(i - 1);
+    tableCount -= 1;
+    if(tableCount < 7){
+        document.getElementById("preview").style.position = "absolute";
+    }
+
+    toDosCount -= 1;
+    if(toDosCount < 1){
+        incompletedTask.innerHTML =` Incompleted Task`;
+    }else{
+        incompletedTask.innerHTML =`${toDosCount} Incompleted Task`;
+    }
 })
 
 editBtn.addEventListener('click', () => {
@@ -132,4 +155,34 @@ function getRowParentElement2(rowObj){
     //Retrieve row value "DESCRIPTION"
     const rowParent = rowObj.parentNode;
     document.getElementById("editDescription").value = rowParent.dataset.description;
-} 
+}
+
+function showPreview(rowObj){
+   const i = rowObj.parentNode.rowIndex;
+   const elementSibling = rowObj.nextSibling.nextSibling;
+   const descPreview = elementSibling.dataset.description;
+   const getTitle = document.getElementById("tableBody").rows[i - 1].cells.item(1).innerHTML;
+
+   document.getElementById("preview").innerHTML =
+   `
+    <nav class="navbar mt-4">
+        <h3 class="lato mb-3">${getTitle}</h3>
+        <p class="text-muted">needs to be completed on</p>
+    </nav>
+
+    <p class="font-weight-bold ml-3">${descPreview}</p>
+   `
+}
+
+function changeStateToCheck(rowObj){
+    const timesIconElement = rowObj.parentNode.lastElementChild;
+    timesIconElement.classList.remove("d-none");
+    rowObj.style.display = "none"
+}
+
+function changeStateToUnCheck(rowObj){
+    const checkIconElement = rowObj.parentNode.firstElementChild;
+    rowObj.classList.add("d-none");
+    checkIconElement.style.display = "inline-block"
+}
+
