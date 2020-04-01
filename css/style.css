@@ -1,0 +1,85 @@
+.navcfg{
+    background-color: #72c0db;
+    box-shadow: 0 5px 5px lightgray;
+}
+
+.lato{
+    font-family: 'Lato';
+}
+
+.inctasks{
+    width: 210px;
+}
+
+.btn-blue{
+    background-color: #72c0db;
+    width: 120px !important;
+    justify-self: end;
+}
+
+.todo{
+    font-size: 30px;
+    width: 180px;
+    height: 60px;
+    border-right: solid 2px white;
+    padding-top: 10px;
+}
+
+.tstborder{
+    border: solid 1px black;
+}
+
+.pointer{
+    cursor: pointer;
+}
+
+.pointer:hover{
+    text-decoration: underline;
+}
+
+.thead2{
+    background-color: #194767;
+    border-color: #194767;
+    height: 70px;
+    color: white;
+}
+
+.tbshadow{
+    box-shadow: 0 5px 5px lightgrey;
+    border-radius: 0 0 3px 3px;
+}
+
+.colborder{
+    border-bottom: solid 2px black;
+}
+
+body{
+    background-color: #F7F7F6;
+}
+
+.h7{
+    font-size: 1.10rem;
+}
+
+.template{
+    display: none !important;
+}
+
+.task{
+    color: #72c0db;
+    font-size: 19px;
+}
+
+.checkicon{
+    text-align: center;
+    width: 6px;
+}
+
+.fa-check-circle, .fa-times-circle, .fa-pencil-alt, .fa-trash-alt:hover{
+    cursor: pointer;
+}
+
+i{
+    font-size: 20px;
+    opacity: 0.4; 
+}
