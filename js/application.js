@@ -107,6 +107,7 @@ deleteBtn.addEventListener('click', () => {
     toDosCount -= 1;
     if(toDosCount < 1){
         incompletedTask.innerHTML =` Incompleted Task`;
+        toDosCount = 0;
     }else{
         incompletedTask.innerHTML =`${toDosCount} Incompleted Task`;
     }
@@ -178,6 +179,15 @@ function changeStateToCheck(rowObj){
     const timesIconElement = rowObj.parentNode.lastElementChild;
     timesIconElement.classList.remove("d-none");
     rowObj.style.display = "none"
+
+    toDosCount -= 1;
+    if(toDosCount < 1){
+        incompletedTask.innerHTML =` Incompleted Task`;
+        toDosCount = 0;
+    }else{
+        incompletedTask.innerHTML =`${toDosCount} Incompleted Task`;
+    }
+
 }
 
 function changeStateToUnCheck(rowObj){
