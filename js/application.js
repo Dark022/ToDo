@@ -142,6 +142,15 @@ editBtn.addEventListener('click', () => {
 
     const rowParent = rowParentIndex.parentNode;
     rowParent.dataset.description = taskDescription;
+
+    document.getElementById("preview").innerHTML =
+    `
+        <div class="row h-100 align-items-center">
+            <div class="col text-center">
+                <span class="lato text-lg font-weight-bold">Select a Task to preview it</span>
+            </div>
+        </div>
+    `
 })
 
 function getRowParentElement(rowObj){
@@ -178,17 +187,34 @@ function showPreview(rowObj){
    const descPreview = elementSibling.dataset.description;
    const getTitle = document.getElementById("tableBody").rows[i - 1].cells.item(1).innerHTML;
 
+   let getDate = document.getElementById("tableBody").rows[i - 1].cells.item(2).innerHTML;
+    getDate = getDate.replace(/ /g,"-").replace(/-----/g,"").replace(/\n/g,"");
+    getDate = getDate.split("-");
+    const index = months.findIndex(month => month === getDate[1]);
+    if(index >= 0 && index < 9){
+        getDate = `${getDate[2]}-0${index + 1}-${getDate[0]}`;
+    }
+    else{
+        getDate = `${getDate[2]}-${index + 1}-${getDate[0]}`;
+    }
+
+    let toBeCompleted = new Date(getDate);
+    toBeCompleted.setDate(toBeCompleted.getDate() + 1);
+    toBeCompleted = toBeCompleted.toString().split(" ");
+    toBeCompleted = `needs to be completed on ${toBeCompleted[0]} ${toBeCompleted[2]}, ${toBeCompleted[1]} ${toBeCompleted[3]} at ${toBeCompleted[4]}`;
+
+
    if(checkIcon === "" || checkIcon === "inline-block"){
     document.getElementById("preview").innerHTML =
     `
      <nav class="navbar mt-4">
          <h3 class="lato mb-3">${getTitle}</h3>
-         <p class="text-muted">needs to be completed</p>
+         <p class="text-muted">${toBeCompleted}</p>
      </nav>
  
      <p class="font-weight-bold ml-3 breakword">${descPreview}</p>
     `;
-    }
+   }
     else{
         document.getElementById("preview").innerHTML =
         `
@@ -246,14 +272,29 @@ function changeStateToUnCheck(rowObj){
     rowObj.classList.add("d-none");
     checkIconElement.style.display = "inline-block"
 
+    let getDate = document.getElementById("tableBody").rows[i - 1].cells.item(2).innerHTML;
+    getDate = getDate.replace(/ /g,"-").replace(/-----/g,"").replace(/\n/g,"");
+    getDate = getDate.split("-");
+    const index = months.findIndex(month => month === getDate[1]);
+    if(index >= 0 && index < 9){
+        getDate = `${getDate[2]}-0${index + 1}-${getDate[0]}`;
+    }
+    else{
+        getDate = `${getDate[2]}-${index + 1}-${getDate[0]}`;
+    }
+
+    let toBeCompleted = new Date(getDate);
+    toBeCompleted.setDate(toBeCompleted.getDate() + 1);
+    toBeCompleted = toBeCompleted.toString().split(" ");
+    toBeCompleted = `needs to be completed on ${toBeCompleted[0]} ${toBeCompleted[2]}, ${toBeCompleted[1]} ${toBeCompleted[3]} at ${toBeCompleted[4]}`;
+
     toDosCount += 1;
     incompletedTask.innerHTML =`${toDosCount} Incompleted Task`;
-
     document.getElementById("preview").innerHTML =
     `
      <nav class="navbar mt-4">
          <h3 class="lato mb-3">${getTitle}</h3>
-         <p class="text-muted">needs to be completed</p>
+         <p class="text-muted">${toBeCompleted}</p>
      </nav>
  
      <p class="font-weight-bold ml-3 breakword">${descPreview}</p>
