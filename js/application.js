@@ -230,11 +230,16 @@ function showPreview(rowObj){
 
 function changeStateToCheck(rowObj){
     const i = rowObj.parentNode.parentNode.rowIndex;
+    const editIcon = rowObj.parentNode.parentNode.lastElementChild.firstElementChild;
+    const trashIcon = rowObj.parentNode.parentNode.lastElementChild.lastElementChild;
     const getTitle = document.getElementById("tableBody").rows[i - 1].cells.item(1).innerHTML;
     const descPreview = rowObj.parentNode.nextElementSibling.nextSibling.nextSibling.dataset.description;
     const timesIconElement = rowObj.parentNode.lastElementChild;
     timesIconElement.classList.remove("d-none");
-    rowObj.style.display = "none"
+    rowObj.style.display = "none";
+    editIcon.classList.add("d-none");
+    trashIcon.classList.replace("text-muted", "text-danger"),
+    trashIcon.classList.add("ml-3");
 
     toDosCount -= 1;
     if(toDosCount < 1){
@@ -258,9 +263,7 @@ function changeStateToCheck(rowObj){
 
     <p class="font-weight-bold ml-3 breakword">${descPreview}</p>
    `
-
-   previewUpdate = completeDate;
-    
+   previewUpdate = completeDate; 
 }
 
 function changeStateToUnCheck(rowObj){
@@ -269,8 +272,14 @@ function changeStateToUnCheck(rowObj){
     const getDescription = rowObj.parentNode.parentNode.firstElementChild.nextElementSibling.nextElementSibling.nextElementSibling;
     const descPreview = getDescription.dataset.description;
     const checkIconElement = rowObj.parentNode.firstElementChild;
+    const editIcon = rowObj.parentNode.parentNode.lastElementChild.firstElementChild;
+    const trashIcon = rowObj.parentNode.parentNode.lastElementChild.lastElementChild;
     rowObj.classList.add("d-none");
-    checkIconElement.style.display = "inline-block"
+    checkIconElement.style.display = "inline-block";
+    editIcon.classList.remove("d-none");
+    trashIcon.classList.replace("text-danger", "text-muted");
+    trashIcon.classList.remove("ml-3");
+
 
     let getDate = document.getElementById("tableBody").rows[i - 1].cells.item(2).innerHTML;
     getDate = getDate.replace(/ /g,"-").replace(/-----/g,"").replace(/\n/g,"");
