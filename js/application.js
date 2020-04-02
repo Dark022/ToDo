@@ -108,7 +108,7 @@ deleteBtn.addEventListener('click', () => {
         document.getElementById("preview").style.position = "absolute";
     }
 
-    if(checkIcon === "" || checkIcon === "inline-block "){
+    if(checkIcon === "" || checkIcon === "inline-block"){
         toDosCount -= 1;
     }
 
