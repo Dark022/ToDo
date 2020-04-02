@@ -82,6 +82,7 @@ i{
     position: absolute;
     bottom: 0;
     height: 200px;
+    box-shadow: 3px 3px 5px 6px #ccc;
 }
 
 h3{
@@ -93,11 +94,10 @@ h3{
     font-size: larger;
 }
 
-body{
-        position: relative;
-        min-height: 100vh;
-}
-
 .d-none{
     display: none;
+}
+
+.breakword{
+    word-wrap: break-word;
 }

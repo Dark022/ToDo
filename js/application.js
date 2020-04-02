@@ -13,6 +13,7 @@ const deleteBtn = document.getElementById("delete");
 const editBtn = document.getElementById("edit");
 const incompletedTask = document.getElementById("incompletedTask");
 
+let previewUpdate;
 let toDosCount = 0;
 let tableCount = 0;
 let rowParentIndex;
@@ -98,19 +99,33 @@ createTaskBtn.addEventListener('click', () => {
 
 deleteBtn.addEventListener('click', () => {
     const i = rowParentIndex.parentNode.parentNode.rowIndex;
+    const checkIcon = rowParentIndex.parentNode.parentNode.firstElementChild.firstElementChild.style.display;
+
     document.getElementById("tableBody").deleteRow(i - 1);
     tableCount -= 1;
+
     if(tableCount < 7){
         document.getElementById("preview").style.position = "absolute";
     }
 
-    toDosCount -= 1;
+    if(checkIcon === "" || checkIcon === "inline-block "){
+        toDosCount -= 1;
+    }
+
     if(toDosCount < 1){
         incompletedTask.innerHTML =` Incompleted Task`;
-        toDosCount = 0;
     }else{
         incompletedTask.innerHTML =`${toDosCount} Incompleted Task`;
     }
+
+    document.getElementById("preview").innerHTML =
+    `
+        <div class="row h-100 align-items-center">
+            <div class="col text-center">
+                <span class="lato text-lg font-weight-bold">Select a Task to preview it</span>
+            </div>
+        </div>
+    `
 })
 
 editBtn.addEventListener('click', () => {
@@ -121,8 +136,6 @@ editBtn.addEventListener('click', () => {
 
     const dateEdit2 = new DateObj(taskLimitDate, unformatedTodayDate)
     const finalDate = dateEdit2.monthToText();
-
-    console.log(finalDate)
 
     document.getElementById("tableBody").rows[i - 1].cells.item(1).innerHTML = taskTitle;
     document.getElementById("tableBody").rows[i - 1].cells.item(2).innerHTML = finalDate;
@@ -161,21 +174,38 @@ function getRowParentElement2(rowObj){
 function showPreview(rowObj){
    const i = rowObj.parentNode.rowIndex;
    const elementSibling = rowObj.nextSibling.nextSibling;
+   const checkIcon = rowObj.parentNode.firstElementChild.firstElementChild.style.display;
    const descPreview = elementSibling.dataset.description;
    const getTitle = document.getElementById("tableBody").rows[i - 1].cells.item(1).innerHTML;
 
-   document.getElementById("preview").innerHTML =
-   `
-    <nav class="navbar mt-4">
-        <h3 class="lato mb-3">${getTitle}</h3>
-        <p class="text-muted">needs to be completed on</p>
-    </nav>
-
-    <p class="font-weight-bold ml-3">${descPreview}</p>
-   `
+   if(checkIcon === "" || checkIcon === "inline-block"){
+    document.getElementById("preview").innerHTML =
+    `
+     <nav class="navbar mt-4">
+         <h3 class="lato mb-3">${getTitle}</h3>
+         <p class="text-muted">needs to be completed</p>
+     </nav>
+ 
+     <p class="font-weight-bold ml-3 breakword">${descPreview}</p>
+    `;
+    }
+    else{
+        document.getElementById("preview").innerHTML =
+        `
+         <nav class="navbar mt-4">
+             <h3 class="lato mb-3">${getTitle}</h3>
+             <p class="text-muted">${previewUpdate}</p>
+         </nav>
+     
+         <p class="font-weight-bold ml-3 breakword">${descPreview}</p>
+        `;
+    }
 }
 
 function changeStateToCheck(rowObj){
+    const i = rowObj.parentNode.parentNode.rowIndex;
+    const getTitle = document.getElementById("tableBody").rows[i - 1].cells.item(1).innerHTML;
+    const descPreview = rowObj.parentNode.nextElementSibling.nextSibling.nextSibling.dataset.description;
     const timesIconElement = rowObj.parentNode.lastElementChild;
     timesIconElement.classList.remove("d-none");
     rowObj.style.display = "none"
@@ -188,11 +218,45 @@ function changeStateToCheck(rowObj){
         incompletedTask.innerHTML =`${toDosCount} Incompleted Task`;
     }
 
+    let completeDate = new Date();
+    completeDate = completeDate.toString();
+    completeDate = completeDate.split(" ")
+    completeDate = `Was completed on ${completeDate[0]} ${completeDate[2]}, ${completeDate[1]} ${completeDate[3]} at ${completeDate[4]}`
+
+    document.getElementById("preview").innerHTML =
+   `
+    <nav class="navbar mt-4">
+        <h3 class="lato mb-3">${getTitle}</h3>
+        <p class="text-muted">${completeDate}</p>
+    </nav>
+
+    <p class="font-weight-bold ml-3 breakword">${descPreview}</p>
+   `
+
+   previewUpdate = completeDate;
+    
 }
 
 function changeStateToUnCheck(rowObj){
+    const i = rowObj.parentNode.parentNode.rowIndex;
+    const getTitle = document.getElementById("tableBody").rows[i - 1].cells.item(1).innerHTML;
+    const getDescription = rowObj.parentNode.parentNode.firstElementChild.nextElementSibling.nextElementSibling.nextElementSibling;
+    const descPreview = getDescription.dataset.description;
     const checkIconElement = rowObj.parentNode.firstElementChild;
     rowObj.classList.add("d-none");
     checkIconElement.style.display = "inline-block"
+
+    toDosCount += 1;
+    incompletedTask.innerHTML =`${toDosCount} Incompleted Task`;
+
+    document.getElementById("preview").innerHTML =
+    `
+     <nav class="navbar mt-4">
+         <h3 class="lato mb-3">${getTitle}</h3>
+         <p class="text-muted">needs to be completed</p>
+     </nav>
+ 
+     <p class="font-weight-bold ml-3 breakword">${descPreview}</p>
+    `;
 }
 
